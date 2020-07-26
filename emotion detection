@@ -35,10 +35,10 @@ brainwave_df.drop('label', axis = 1, inplace=True)
 
 ##%%time
 
-pl_svm = Pipeline(steps=[('scaler',StandardScaler()),
-                             ('pl_svm', LinearSVC())])
-scores = cross_val_score(pl_svm, brainwave_df, label_df, cv=10,scoring='accuracy')
-print('Accuracy for Linear SVM : ', scores.mean())
+pl_log_reg = Pipeline(steps=[('scaler',StandardScaler()),
+                             ('log_reg', LogisticRegression(penalty='l2',multi_class='multinomial', solver='sag',class_weight='balanced', max_iter=200))])
+scores = cross_val_score(pl_log_reg, brainwave_df, label_df, cv=10,scoring='accuracy')
+print('Accuracy for Logistic Regression: ', scores.mean())
 
 # -*-coding:utf-8-*-
 from sklearn.metrics import confusion_matrix
@@ -50,7 +50,7 @@ labels = ['positive', 'negative', 'neutron']
 
 
 y_true = label_df
-y_pred = pl_svm.fit(brainwave_df, label_df).predict(brainwave_df)
+y_pred = pl_log_reg.fit(brainwave_df, label_df).predict(brainwave_df)
 print(y_pred)
 print(y_true)
 tick_marks = np.array(range(len(labels))) + 0.5
@@ -91,6 +91,4 @@ plot_confusion_matrix(cm_normalized, title='Normalized confusion matrix')
 # show confusion matrix
 plt.savefig(r'C:\Users\12270\Desktop\summer_deeplearning\result1', format='png')
 plt.show()
-
-
 
